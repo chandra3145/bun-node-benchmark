@@ -1,6 +1,20 @@
-const createApp = ({ Hono, serveStatic, renderFile }) => {
+import { readFileSync } from 'fs';
+
+const templateCache = {};
+
+function getCompiledTemplate(ejs, templatePath) {
+  if (!templateCache[templatePath]) {
+    const str = readFileSync(templatePath, 'utf8');
+    templateCache[templatePath] = ejs.compile(str, { filename: templatePath });
+  }
+  return templateCache[templatePath];
+}
+
+const createApp = ({ Hono, serveStatic, ejs }) => {
     const app = new Hono()
     const runtime = process.versions.bun ? 'Bun' : 'Node.js'
+
+    ejs.cache = true // Enable caching for EJS templates
 
     const root = process.cwd() + '/../shared/';
 
@@ -11,7 +25,8 @@ const createApp = ({ Hono, serveStatic, renderFile }) => {
     app.use('*', async (c, next) => {
         c.render = (template, data = {}) => {
             const templatePath = `${root}/views/${template}.ejs`;
-            const html = renderFile(templatePath, data, { async: false })
+            const compiled = getCompiledTemplate(ejs, templatePath);
+            const html = compiled(data);
             return c.html(html)
         }
         await next()

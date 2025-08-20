@@ -4,16 +4,16 @@ This repository contains two identical applications built with Hono and EJS temp
 
 ## Applications
 
-### 1. Node.js + Hono + EJS (`node-hono-app/`)
-- Runtime: Node.js
+## Common
 - Framework: Hono
 - Template Engine: EJS
+
+### 1. Node.js + Hono + EJS (`node-hono-app/`)
+- Runtime: Node.js
 - Port: 3000
 
 ### 2. Bun + Hono + EJS (`bun-hono-app/`)
 - Runtime: Bun
-- Framework: Hono
-- Template Engine: EJS
 - Port: 3001
 
 ## Setup Instructions
@@ -27,6 +27,7 @@ This repository contains two identical applications built with Hono and EJS temp
 
 **Node.js App:**
 ```bash
+export NODE_ENV=production
 cd node-hono-app
 npm install
 npm start
@@ -34,9 +35,10 @@ npm start
 
 **Bun App:**
 ```bash
+export NODE_ENV=production
 cd bun-hono-app
 bun install
-bun start
+bun start --production
 ```
 
 ## Available Routes
